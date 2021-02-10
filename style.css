@@ -5,24 +5,37 @@ html, body {
 }
 
 .container {
-    display: grid;
+    text-align: center;
+    /* display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: 100px 1px 1fr;
     justify-items: center;
     align-items: center;
-    grid-gap: 10px;
+    grid-gap: 10px; */
 }
 
-.gameField{
-    background: #9ebcd8;
+.swipper {
+    border: 3px solid black;
+    padding: 5px;
+    display: inline-block;
+}
+
+.swipper div{
+    margin: 0;
+    padding: 0;
+    height: 50px;
+    margin: 3px;
+    /* background: #9ebcd8;
     width: 250px;
     height: 250px;
     display: grid;
     grid-template-columns: repeat(10, 1fr);
     grid-template-rows: repeat(10, 1fr);
-    grid-gap: 2px;
+    grid-gap: 2px; */
 }
 
-.cell{
-    background-color: rgb(207, 20, 20);
+.swipper img{
+    width: 50px;
+    height: 50px;
+    margin: 1px;
 }

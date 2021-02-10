@@ -1,40 +1,21 @@
 "use strict"
-// let doc = document
-// let age1 = null
-// let name = "Mery"
-// alert(age1);
-// alert(age2);
-
-// function sayName(_name) {
-//     alert(_name);
-//   }
-
-// sayName(name);
-function main() {
-    let e = document.querySelector('.gameField');
-
-    for (let i = 0; i < 100; i++) {
-        let buff = document.createElement('div');
-        buff.classList.add('cell');
-        e.append(buff);
-    }
-}
 
 document.addEventListener('readystatechange', () => {
-    if (document.readyState === 'complete') main();
-});
+    if (document.readyState === 'complete');
+}); 
 
-// //   let age = prompt('Сколько тебе лет?', 100);
+const matrix = getMatrix(10, 10)
+for (let i = 0; i < 20; i++){
+    const cell = getRandomBomb(matrix)
+}
+console.log(matrix)
 
-// // alert(`Тебе ${age} лет!`); // Тебе 100 лет!
+const gameField = matrixToHtml(matrix)
 
-// // let flag = 0;
-// // alert(Boolean(flag));
-// // alert(String(flag));
+const addElement = document.querySelector('#general')
+addElement.append(gameField)
 
-// alert( 2 + (2 + "2"))
 
-// alert( 2 + 2 + "1")
 // a = (z, x, c) => { let document = 10; return document; }
 // e.style='width: 100px; height: 100px'
 // e = document.createElement('div')
