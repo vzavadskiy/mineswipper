@@ -8,7 +8,6 @@ const matrix = getMatrix(10, 10)
 for (let i = 0; i < 20; i++){
     const cell = getRandomBomb(matrix)
 }
-console.log(matrix)
 
 const gameField = matrixToHtml(matrix)
 

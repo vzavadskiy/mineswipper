@@ -6,12 +6,6 @@ html, body {
 
 .container {
     text-align: center;
-    /* display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 100px 1px 1fr;
-    justify-items: center;
-    align-items: center;
-    grid-gap: 10px; */
 }
 
 .swipper {
@@ -20,22 +14,20 @@ html, body {
     display: inline-block;
 }
 
-.swipper div{
+.swipper div {
     margin: 0;
     padding: 0;
     height: 50px;
     margin: 3px;
-    /* background: #9ebcd8;
-    width: 250px;
-    height: 250px;
-    display: grid;
-    grid-template-columns: repeat(10, 1fr);
-    grid-template-rows: repeat(10, 1fr);
-    grid-gap: 2px; */
 }
 
 .swipper img{
     width: 50px;
     height: 50px;
     margin: 1px;
+}
+
+.swipper img[src="img/default.png"] {
+    border: 1px solid black;
+    box-sizing: border-box;
 }
