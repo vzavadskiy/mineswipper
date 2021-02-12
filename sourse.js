@@ -46,7 +46,7 @@ function getRandomBomb(matrix){
 
 function getCell(matrix, y, x){
     if(!matrix[y] || !matrix[y][x]){
-        return 0
+        return null
     }
     return matrix[y][x]
 }
@@ -101,12 +101,12 @@ function matrixToHtml(){
                     cell.show = true; 
                     if (cell.bomb){
                         imgElement.src = 'img/bomb.png'
-                        setTimeout(alert('Try again'), 3000)
+                        //setTimeout(() => alert('Try again'), 3000)
                     } else if (cell.countBomb > 0){
                         imgElement.src = `img/${cell.countBomb}.png`
                     } else {
                         imgElement.src = 'img/empty.png'
-                        getAroundEmpty(matrix, cell)
+                        getAroundFourConnected(matrix, cell.y, cell.x)
                     }
                 }
             })
@@ -174,13 +174,60 @@ function countCloseCells (matrix) {
     return countCells
 }
 
-function getAroundFourConnected(matrix, y, x){
-    let cells = new Set()
-    const cell = getCell(matrix, y + 0, x + 1)
+function checkCellIsEmpty(cell) {
 
-    cell = getCell(matrix, y, x + -1)
-
-    cell = getCell(matrix, y + dy, x + dx)
-
-    return cells
+    return !cell.bomb && !cell.show && !cell.flag && (cell.countBomb == 0);
 }
+
+function checkCellIsNumber(cell) {
+
+    return !cell.bomb && !cell.show && !cell.flag && (cell.countBomb != 0);
+}
+
+function getAroundFourConnected(matrix, y, x){
+    const cell = getCell(matrix, y, x)
+    let numberCells = new Set()
+    let cells = new Set()
+    cells.add(cell);
+
+    let index = 0
+    while (index < cells.size) {
+        const currentCell = [...cells][index];
+        currentCell.show = true
+        currentCell.element.src = 'img/empty.png'
+        
+        const leftCell = getCell(matrix, currentCell.y, currentCell.x - 1);
+        if (leftCell != null) {
+            if (checkCellIsEmpty(leftCell)) cells.add(leftCell);
+            else if (checkCellIsNumber(leftCell)) numberCells.add(leftCell);
+        }
+        
+        const rightCell = getCell(matrix, currentCell.y, currentCell.x + 1);
+        if (rightCell != null){
+            if (rightCell && checkCellIsEmpty(rightCell)) cells.add(rightCell);
+            else if (checkCellIsNumber(rightCell)) numberCells.add(rightCell);
+        }
+        
+        const upCell = getCell(matrix, currentCell.y + 1, currentCell.x);
+        if (upCell != null) {
+            if (upCell && checkCellIsEmpty(upCell)) cells.add(upCell);
+            else if (checkCellIsNumber(upCell)) numberCells.add(upCell);
+        }
+        
+        const downCell = getCell(matrix, currentCell.y - 1, currentCell.x);
+        if (downCell != null) {
+            if (downCell && checkCellIsEmpty(downCell)) cells.add(downCell);
+            else if (checkCellIsNumber(downCell)) numberCells.add(downCell);
+        }
+
+        index++;
+        
+    }
+    numberCells.forEach((cell) => {
+        cell.show = true
+        cell.element.src = `img/${cell.countBomb}.png`
+    });
+    
+}
+
+//function processing
