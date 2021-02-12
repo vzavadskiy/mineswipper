@@ -4,12 +4,25 @@ document.addEventListener('readystatechange', () => {
     if (document.readyState === 'complete');
 }); 
 
-const matrix = getMatrix(10, 10)
-for (let i = 0; i < 10; i++){
-    const cell = getRandomBomb(matrix)
+
+//const size = getSizeGameField()
+//const countBomb = getCountBombOnFameField()
+
+
+
+function createGameField(size, countBomb) {
+    const matrix = getMatrix(size, size)
+    for (let i = 0; i < countBomb; i++){
+        const cell = getRandomBomb(matrix)
+    }
+    return matrix
 }
 
-const gameField = matrixToHtml(matrix)
-
-const addElement = document.querySelector('#general')
-addElement.append(gameField)
+function letsGo(){
+    const size = getSizeGameField()
+    const countBomb = getCountBombOnGameField()
+    const matrix = createGameField(size, countBomb)
+    const gameField = renderToHTML(matrix)
+    const generalElement = document.querySelector('#general')
+    generalElement.append(gameField)
+}

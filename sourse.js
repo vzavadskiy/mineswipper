@@ -67,7 +67,7 @@ function getAroundCells(matrix, y, x){
     return cells
 }
 
-function matrixToHtml(){
+function renderToHTML(matrix){
     const gameField = document.createElement('div')
     gameField.classList.add('swipper')
     
@@ -101,14 +101,21 @@ function matrixToHtml(){
                     cell.show = true; 
                     if (cell.bomb){
                         imgElement.src = 'img/bomb.png'
-                        //setTimeout(() => alert('Try again'), 3000)
+                        setTimeout(() => {
+                            if (confirm("You're loser, try again?")) window.location.reload()
+                        }, 400);
+                        
+                        //setTimeout(() => alert('Try again'), 400, )
+                        
                     } else if (cell.countBomb > 0){
                         imgElement.src = `img/${cell.countBomb}.png`
                     } else {
                         imgElement.src = 'img/empty.png'
                         getAroundFourConnected(matrix, cell.y, cell.x)
                     }
+                    
                 }
+                checkEndGame(matrix)
             })
             rowElement.append(imgElement)
             // ------
@@ -129,24 +136,21 @@ function matrixToHtml(){
     return gameField
 }
 
-function getAroundEmpty (matrix, cell) {
-        //let cells = new Set()
-        //if (cell)
-        const cells = getAroundCells(matrix, cell.y, cell.x)
-        cells.forEach((item) => {
-            if (item.countBomb === 0 && !item.bomb && !item.flag){
-                item.show = true
-                item.element.src = 'img/empty.png'
-            }
-        })
-}
+// function getAroundEmpty (matrix, cell) {
+//         const cells = getAroundCells(matrix, cell.y, cell.x)
+//         cells.forEach((item) => {
+//             if (item.countBomb === 0 && !item.bomb && !item.flag){
+//                 item.show = true
+//                 item.element.src = 'img/empty.png'
+//             }
+//         })
+// }
 
-function checkEnd (matrix) {
-    if (countFlags(matrix) === countCloseCells(matrix) && countCloseCells(matrix) === 20) {
-        alert('You are winner')
+function checkEndGame (matrix) {
+    if (countFlags(matrix) == countCloseCells(matrix) && countCloseCells(matrix) == 10) {
+        setTimeout(() => alert('You are winner'), 1000)
     }
 }
-// e.addEventListener('click', (e) => console.log(''))
 
 function countFlags (matrix) {
     let countFlag = 0 
@@ -166,7 +170,7 @@ function countCloseCells (matrix) {
     for (let y = 0; y < matrix.length; y++) {
         for (let x = 0; x < matrix[y].length; x++) {
             const cell = matrix[y][x]
-            if(!cell.show && !cell.bomb){
+            if(!cell.show){
                 countCells++
             }
         }
@@ -231,3 +235,15 @@ function getAroundFourConnected(matrix, y, x){
 }
 
 //function processing
+
+
+function getCountBombOnGameField(){ return Number(document.getElementById("countBomb").value);}
+
+function getSizeGameField(){ return Number(document.getElementById("sizeField").value);}
+
+    // function letsGo(){
+    //     return (document.getElementById("showField"));
+    //     }
+
+    //calc((100% - 2px * 20) / 20) вставить в высоту строки и картинки
+    
