@@ -67,16 +67,18 @@ function getAroundCells(matrix, y, x){
     return cells
 }
 
-function renderToHTML(matrix){
+function renderToHTML(matrix, size){
     const gameField = document.createElement('div')
     gameField.classList.add('swipper')
     
     for (let y = 0; y < matrix.length; y++) {
         const rowElement = document.createElement('div')
         rowElement.classList.add('row')
+        rowElement.style.height = 'calc((100% - 2px *' + size +') / ' + size +')';
         for (let x = 0; x < matrix[y].length; x++) {
             const cell = matrix[y][x]
             const imgElement = document.createElement('img')
+            imgElement.style.width = 'calc((100% - 2px *' + size +') / ' + size +')';
             imgElement.src = 'img/default.png'
             imgElement.draggable= false
             cell.element = imgElement;
@@ -237,13 +239,23 @@ function getAroundFourConnected(matrix, y, x){
 //function processing
 
 
-function getCountBombOnGameField(){ return Number(document.getElementById("countBomb").value);}
+function getCountBombOnGameField(){ 
+    const buff = Number(document.getElementById("countBomb").value);
+    if (buff == '') {
+        alert('Бомбы не могут отсутствовать на поле!')
+        return false    
+    } else {
+        return buff
+    }
+}
 
-function getSizeGameField(){ return Number(document.getElementById("sizeField").value);}
+function getSizeGameField(){ 
+    const buff = Number(document.getElementById("sizeField").value);
+    if(buff == '') { 
+        alert('Размер поля не может быть пустым!')
+        return false
+    } else {
+        return buff;
+    }
+}
 
-    // function letsGo(){
-    //     return (document.getElementById("showField"));
-    //     }
-
-    //calc((100% - 2px * 20) / 20) вставить в высоту строки и картинки
-    

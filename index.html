@@ -11,19 +11,25 @@
 
     <body class="container">
         <h1>Сапёр</h1>
-        
-
-
         <div style="width: 100%; height: 1px; background: black;"></div>
+        
+        Задать свои параметры <input type="checkbox" id="checkboxForGame">
+        <p></p>
+        <form id="isCheckradio">
+            <label><input type="radio" name="r1" value="0">Легкий (10 на 10, 20 бомб)</label><br>
+            <label><input type="radio" name="r1" value="1">Средний (15 на 15, 50 бомб)</label><br>
+            <label><input type="radio" name="r1" value="2">Сложный (20 на 20, 100 бомб)</label><br>
+        </form>
+        <!-- document.getElementsByName('r1'); -->
+        
+        <!-- onchange="checkBox() -->
 
-        <p>Введите количество бомб</p>
-        <input type="text" value="" id="countBomb">
-
-        <p>Размерность игрового поля</p>
-        <input type="number" id="sizeField">
-
-        <p>Отобразить поле</p>
-        <button id="showField" onclick="letsGo()">Отобразить</button>
+        <div id="isCheckbox">
+            <p>Введите количество бомб <input type="text" value="" id="countBomb"></p>
+            <p>Размерность игрового поля <input type="number" id="sizeField"></p>
+            <!-- <p>Отобразить поле</p> -->
+            <button id="showField" onclick="letsGo()">Отобразить</button>
+        </div>
 
         <div id="general"></div>
         
