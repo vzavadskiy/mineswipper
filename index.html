@@ -13,23 +13,23 @@
         <h1>Сапёр</h1>
         <div style="width: 100%; height: 1px; background: black;"></div>
         
-        Задать свои параметры <input type="checkbox" id="checkboxForGame">
         <p></p>
         <form id="isCheckradio">
-            <label><input type="radio" name="r1" value="0">Легкий (10 на 10, 20 бомб)</label><br>
-            <label><input type="radio" name="r1" value="1">Средний (15 на 15, 50 бомб)</label><br>
-            <label><input type="radio" name="r1" value="2">Сложный (20 на 20, 100 бомб)</label><br>
+            <div>
+                <label><input type="radio" name="r1" value="0" checked> Легкий (10 на 10, 15 бомб)</label><br>
+                <label><input type="radio" name="r1" value="1"> Средний (15 на 15, 40 бомб)</label><br>
+                <label><input type="radio" name="r1" value="2"> Сложный (20 на 20, 80 бомб)</label><br>
+            </div>
+            <div id="isCheckbox" class="is-hidden">
+                <label> Введите количество бомб  <input type="number" id="countBomb" max="624" min="1" value="5"></label><br><br>
+                <label> Размерность игрового поля  <input type="number" id="sizeField" max="25" min="2" value="5"></label><br>
+            </div>
         </form>
         <!-- document.getElementsByName('r1'); -->
-        
+        <label>Задать свои параметры <input type="checkbox" id="checkboxForGame"><br><br></label> 
         <!-- onchange="checkBox() -->
 
-        <div id="isCheckbox">
-            <p>Введите количество бомб <input type="text" value="" id="countBomb"></p>
-            <p>Размерность игрового поля <input type="number" id="sizeField"></p>
-            <!-- <p>Отобразить поле</p> -->
-            <button id="showField" onclick="letsGo()">Отобразить</button>
-        </div>
+        <button id="showField" onclick="letsGo()">Отобразить</button>
 
         <div id="general"></div>
         
@@ -37,3 +37,5 @@
         <script src="/main.js"></script>
     </body>
 </html>
+
+

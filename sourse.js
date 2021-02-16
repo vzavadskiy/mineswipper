@@ -67,7 +67,7 @@ function getAroundCells(matrix, y, x){
     return cells
 }
 
-function renderToHTML(matrix, size){
+function renderToHTML(matrix, size, countBombsOnField) {
     const gameField = document.createElement('div')
     gameField.classList.add('swipper')
     
@@ -82,6 +82,26 @@ function renderToHTML(matrix, size){
             imgElement.src = 'img/default.png'
             imgElement.draggable= false
             cell.element = imgElement;
+            
+            imgElement.addEventListener('click', (event) => {
+                if (!cell.none && !cell.flag && !cell.show) {
+                    console.log(cell.id); 
+                    cell.show = true; 
+                    if (cell.bomb){
+                        imgElement.src = 'img/bomb.png'
+                        setTimeout(() => {
+                            if (confirm("You're loser, try again?")) letsGo()
+                        }, 400);
+                        //setTimeout(() => alert('Try again'), 400, ) 
+                    } else if (cell.countBomb > 0){
+                        imgElement.src = `img/${cell.countBomb}.png`
+                    } else {
+                        imgElement.src = 'img/empty.png'
+                        getAroundFourConnected(matrix, cell.y, cell.x)
+                    }
+                }
+                checkEndGame(matrix, countBombsOnField)
+            })
 
             imgElement.addEventListener('contextmenu', (event) => {
                 event.preventDefault();
@@ -94,31 +114,9 @@ function renderToHTML(matrix, size){
                         cell.flag = true
                     }
                 }
-                return false;
+                checkEndGame(matrix, countBombsOnField)
             })
-
-            imgElement.addEventListener('click', (event) => {
-                if (!cell.none && !cell.flag && !cell.show) {
-                    console.log(cell.id); 
-                    cell.show = true; 
-                    if (cell.bomb){
-                        imgElement.src = 'img/bomb.png'
-                        setTimeout(() => {
-                            if (confirm("You're loser, try again?")) window.location.reload()
-                        }, 400);
-                        
-                        //setTimeout(() => alert('Try again'), 400, )
-                        
-                    } else if (cell.countBomb > 0){
-                        imgElement.src = `img/${cell.countBomb}.png`
-                    } else {
-                        imgElement.src = 'img/empty.png'
-                        getAroundFourConnected(matrix, cell.y, cell.x)
-                    }
-                    
-                }
-                checkEndGame(matrix)
-            })
+            
             rowElement.append(imgElement)
             // ------
             // cell.show = true;
@@ -138,19 +136,13 @@ function renderToHTML(matrix, size){
     return gameField
 }
 
-// function getAroundEmpty (matrix, cell) {
-//         const cells = getAroundCells(matrix, cell.y, cell.x)
-//         cells.forEach((item) => {
-//             if (item.countBomb === 0 && !item.bomb && !item.flag){
-//                 item.show = true
-//                 item.element.src = 'img/empty.png'
-//             }
-//         })
-// }
+document.querySelectorAll('.swipper').forEach((element) => {
+    element.remove();
+})
 
-function checkEndGame (matrix) {
-    if (countFlags(matrix) == countCloseCells(matrix) && countCloseCells(matrix) == 10) {
-        setTimeout(() => alert('You are winner'), 1000)
+function checkEndGame (matrix, bombs) {
+    if (countFlags(matrix) == countCloseCells(matrix) && countCloseCells(matrix) == bombs) {
+        setTimeout(() => alert('You are winner'), 500)
     }
 }
 
@@ -241,7 +233,7 @@ function getAroundFourConnected(matrix, y, x){
 
 function getCountBombOnGameField(){ 
     const buff = Number(document.getElementById("countBomb").value);
-    if (buff == '') {
+    if (buff == 0) {
         alert('Бомбы не могут отсутствовать на поле!')
         return false    
     } else {
@@ -251,7 +243,7 @@ function getCountBombOnGameField(){
 
 function getSizeGameField(){ 
     const buff = Number(document.getElementById("sizeField").value);
-    if(buff == '') { 
+    if(buff == 0) { 
         alert('Размер поля не может быть пустым!')
         return false
     } else {
@@ -259,3 +251,12 @@ function getSizeGameField(){
     }
 }
 
+function getDefaultValues() {
+    return Number(document.forms.isCheckradio.r1.value);
+  }
+
+
+  //добавление людей в список игроков
+  // localStorage.setItem('test', JSON.stringify({name: 'Vasya'}))
+  // localStorage.getItem('test')
+  // JSON.parse(localStorage.getItem('test'))
