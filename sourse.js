@@ -82,10 +82,10 @@ function renderToHTML(matrix, size, countBombsOnField) {
             imgElement.src = 'img/default.png'
             imgElement.draggable= false
             cell.element = imgElement;
-            
+            // `${1 + 1} qasdasdas ${} `
             imgElement.addEventListener('click', (event) => {
                 if (!cell.none && !cell.flag && !cell.show) {
-                    console.log(cell.id); 
+                    // console.log(cell.id); 
                     cell.show = true; 
                     if (cell.bomb){
                         imgElement.src = 'img/bomb.png'
@@ -173,12 +173,10 @@ function countCloseCells (matrix) {
 }
 
 function checkCellIsEmpty(cell) {
-
     return !cell.bomb && !cell.show && !cell.flag && (cell.countBomb == 0);
 }
 
 function checkCellIsNumber(cell) {
-
     return !cell.bomb && !cell.show && !cell.flag && (cell.countBomb != 0);
 }
 
@@ -187,39 +185,28 @@ function getAroundFourConnected(matrix, y, x){
     let numberCells = new Set()
     let cells = new Set()
     cells.add(cell);
+    
+    const template = [
+        [-1, -1], [0, -1], [1, -1],
+        [-1, 0],           [1, 0],
+        [-1, 1],  [0, 1],  [1, 1],
+    ];
 
     let index = 0
     while (index < cells.size) {
         const currentCell = [...cells][index];
         currentCell.show = true
         currentCell.element.src = 'img/empty.png'
-        
-        const leftCell = getCell(matrix, currentCell.y, currentCell.x - 1);
-        if (leftCell != null) {
-            if (checkCellIsEmpty(leftCell)) cells.add(leftCell);
-            else if (checkCellIsNumber(leftCell)) numberCells.add(leftCell);
-        }
-        
-        const rightCell = getCell(matrix, currentCell.y, currentCell.x + 1);
-        if (rightCell != null){
-            if (rightCell && checkCellIsEmpty(rightCell)) cells.add(rightCell);
-            else if (checkCellIsNumber(rightCell)) numberCells.add(rightCell);
-        }
-        
-        const upCell = getCell(matrix, currentCell.y + 1, currentCell.x);
-        if (upCell != null) {
-            if (upCell && checkCellIsEmpty(upCell)) cells.add(upCell);
-            else if (checkCellIsNumber(upCell)) numberCells.add(upCell);
-        }
-        
-        const downCell = getCell(matrix, currentCell.y - 1, currentCell.x);
-        if (downCell != null) {
-            if (downCell && checkCellIsEmpty(downCell)) cells.add(downCell);
-            else if (checkCellIsNumber(downCell)) numberCells.add(downCell);
-        }
 
-        index++;
         
+        template.forEach(([dx, dy]) => {
+            const _cell = getCell(matrix, currentCell.y + dy, currentCell.x + dx);
+            if (_cell != null) {
+                if (checkCellIsEmpty(_cell)) cells.add(_cell);
+                else if (checkCellIsNumber(_cell)) numberCells.add(_cell);
+            }
+        });
+        index++;
     }
     numberCells.forEach((cell) => {
         cell.show = true
