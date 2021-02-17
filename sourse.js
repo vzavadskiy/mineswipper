@@ -1,5 +1,5 @@
 
-function getMatrix(columns, rows) {
+function createMatrix(columns, rows) {
     const matrix = []
     let ID = 0
     for (let y = 0; y < rows; y++) {
@@ -7,8 +7,8 @@ function getMatrix(columns, rows) {
             for (let x = 0; x < columns; x++) {
                 row.push({
                     id: ID++,
-                    y: y,
-                    x: x,
+                    y,
+                    x,
                     bomb: false,
                     show: false,
                     flag: false,
@@ -23,7 +23,6 @@ function getMatrix(columns, rows) {
 
 function getRandomEmptyCell(matrix) {
     const emptyCells = []
-    
     for (let y = 0; y < matrix.length; y++) {
         for (let x = 0; x < matrix[y].length; x++) {
             const cell = matrix[y][x]
@@ -36,12 +35,10 @@ function getRandomEmptyCell(matrix) {
     return emptyCells[index]
 }
 
-function getRandomBomb(matrix){
+function createBomb(matrix){
     const cell = getRandomEmptyCell(matrix)
     cell.bomb = true
-
-    const cells = getAroundCells(matrix, cell.y, cell.x)
-    cells.forEach((item) => item.countBomb++)
+    getAroundCell(matrix, cell.y, cell.x).forEach((item) => item.countBomb++)
 }
 
 function getCell(matrix, y, x){
@@ -51,53 +48,47 @@ function getCell(matrix, y, x){
     return matrix[y][x]
 }
 
-function getAroundCells(matrix, y, x){
+function createGameField(size, countBomb) {
+    const matrix = createMatrix(size, size)
+    for (let i = 0; i < countBomb; i++){
+        createBomb(matrix)
+    }
+    return matrix
+}
+
+function getAroundCell(matrix, y, x){
     const cells = []
-    for (let dy = -1; dy <= 1 ; dy++) {
-        for (let dx = -1; dx <= 1; dx++) {
-            if (dy == 0 && dx == 0){
-                continue
-            }
-            const cell = getCell(matrix, y + dy, x + dx)
-            if(cell){
+    const template = [
+        [-1, -1], [0, -1], [1, -1],
+        [-1,  0],          [1,  0],
+        [-1,  1], [0,  1] ,[1,  1]
+    ];
+        template.forEach(([dx, dy]) => {
+            const cell = getCell(matrix, y + dy, x + dx);
+            if (cell != null) {
                 cells.push(cell)
             }
-        }
-    }
+        });
     return cells
 }
 
-function renderToHTML(matrix, size, countBombsOnField) {
-    const gameField = document.createElement('div')
-    gameField.classList.add('swipper')
-    
-    for (let y = 0; y < matrix.length; y++) {
-        const rowElement = document.createElement('div')
-        rowElement.classList.add('row')
-        rowElement.style.height = 'calc((100% - 2px *' + size +') / ' + size +')';
-        for (let x = 0; x < matrix[y].length; x++) {
-            const cell = matrix[y][x]
-            const imgElement = document.createElement('img')
-            imgElement.style.width = 'calc((100% - 2px *' + size +') / ' + size +')';
+function addPropertiesImg(imgElement, matrix, cell, size, countBombsOnField) {
+    imgElement.style.width = `calc((100% - 2px *${size}) / ${size})`;
             imgElement.src = 'img/default.png'
             imgElement.draggable= false
-            cell.element = imgElement;
-            // `${1 + 1} qasdasdas ${} `
             imgElement.addEventListener('click', (event) => {
                 if (!cell.none && !cell.flag && !cell.show) {
-                    // console.log(cell.id); 
                     cell.show = true; 
                     if (cell.bomb){
                         imgElement.src = 'img/bomb.png'
                         setTimeout(() => {
                             if (confirm("You're loser, try again?")) letsGo()
-                        }, 400);
-                        //setTimeout(() => alert('Try again'), 400, ) 
+                        }, 200);
                     } else if (cell.countBomb > 0){
                         imgElement.src = `img/${cell.countBomb}.png`
                     } else {
                         imgElement.src = 'img/empty.png'
-                        getAroundFourConnected(matrix, cell.y, cell.x)
+                        openEmptyField(matrix, cell.y, cell.x)
                     }
                 }
                 checkEndGame(matrix, countBombsOnField)
@@ -116,94 +107,78 @@ function renderToHTML(matrix, size, countBombsOnField) {
                 }
                 checkEndGame(matrix, countBombsOnField)
             })
-            
-            rowElement.append(imgElement)
-            // ------
-            // cell.show = true;
-            // if (!cell.show){
-            //     //imgElement.src = 'img/empty.png'
-            // } else if (cell.bomb){
-            //     imgElement.src = 'img/bomb.png'   
-            // } else if (cell.flag){
-            //     imgElement.src = 'img/flag.png'
-            // } else if (cell.countBomb > 0){
-            //     imgElement.src = `img/${cell.countBomb}.png`
-            // } else { imgElement.src = 'img/empty.png' }
-            
+}
+
+function renderToHTML(matrix, size, countBombsOnField) {
+    const gameField = document.createElement('div')
+    gameField.classList.add('swipper')
+    for (let y = 0; y < matrix.length; y++) {
+        const rowElement = document.createElement('div')
+        rowElement.classList.add('row')
+        rowElement.style.height = `calc((100% - 2px *${size}) / ${size})`
+
+        for (let x = 0; x < matrix[y].length; x++) {
+            const cell = matrix[y][x]
+            const imgElement = document.createElement('img')
+            cell.element = imgElement;
+            addPropertiesImg(imgElement, matrix, cell, size, countBombsOnField)
+            rowElement.append(imgElement)            
         }
+        rowElement.addEventListener('contextmenu', (event) => {event.preventDefault()})
         gameField.append(rowElement)
     }
     return gameField
 }
 
-document.querySelectorAll('.swipper').forEach((element) => {
-    element.remove();
-})
-
 function checkEndGame (matrix, bombs) {
-    if (countFlags(matrix) == countCloseCells(matrix) && countCloseCells(matrix) == bombs) {
-        setTimeout(() => alert('You are winner'), 500)
+    if (countFlagsOnField(matrix) == countCloseCellsOnField(matrix) && countCloseCellsOnField(matrix) == bombs) {
+        setTimeout(() => alert('You are winner'), 400)
     }
 }
 
-function countFlags (matrix) {
+function countFlagsOnField (matrix) {
     let countFlag = 0 
-    for (let y = 0; y < matrix.length; y++) {
-        for (let x = 0; x < matrix[y].length; x++) {
-            const cell = matrix[y][x]
-            if(cell.flag){
-                countFlag++
-            }
-        }
-    }
+    matrixTraversal(matrix, (cell) => {
+        if (cell.flag) countFlag++
+    })
     return countFlag
 }
 
-function countCloseCells (matrix) {
+function countCloseCellsOnField (matrix) {
     let countCells = 0 
-    for (let y = 0; y < matrix.length; y++) {
-        for (let x = 0; x < matrix[y].length; x++) {
-            const cell = matrix[y][x]
-            if(!cell.show){
-                countCells++
-            }
-        }
-    }
+    matrixTraversal(matrix, (cell) => {
+        if (!cell.show) countCells++
+    })
     return countCells
 }
 
-function checkCellIsEmpty(cell) {
-    return !cell.bomb && !cell.show && !cell.flag && (cell.countBomb == 0);
+function matrixTraversal (matrix, callback) {
+  matrix.forEach((row) => row.forEach(callback));
 }
 
-function checkCellIsNumber(cell) {
-    return !cell.bomb && !cell.show && !cell.flag && (cell.countBomb != 0);
-}
-
-function getAroundFourConnected(matrix, y, x){
+function openEmptyField(matrix, y, x){
     const cell = getCell(matrix, y, x)
     let numberCells = new Set()
     let cells = new Set()
     cells.add(cell);
-    
     const template = [
         [-1, -1], [0, -1], [1, -1],
-        [-1, 0],           [1, 0],
-        [-1, 1],  [0, 1],  [1, 1],
+        [-1,  0],          [1,  0],
+        [-1,  1], [0,  1] ,[1,  1] 
     ];
-
     let index = 0
     while (index < cells.size) {
         const currentCell = [...cells][index];
         currentCell.show = true
         currentCell.element.src = 'img/empty.png'
-
         
         template.forEach(([dx, dy]) => {
             const _cell = getCell(matrix, currentCell.y + dy, currentCell.x + dx);
             if (_cell != null) {
-                if (checkCellIsEmpty(_cell)) cells.add(_cell);
-                else if (checkCellIsNumber(_cell)) numberCells.add(_cell);
+                if (!_cell.bomb && !_cell.show && !_cell.flag) {
+                    if (_cell.countBomb == 0) cells.add(_cell);
+                    else numberCells.add(_cell);
+                }
             }
         });
         index++;
@@ -212,11 +187,7 @@ function getAroundFourConnected(matrix, y, x){
         cell.show = true
         cell.element.src = `img/${cell.countBomb}.png`
     });
-    
 }
-
-//function processing
-
 
 function getCountBombOnGameField(){ 
     const buff = Number(document.getElementById("countBomb").value);
@@ -238,9 +209,34 @@ function getSizeGameField(){
     }
 }
 
-function getDefaultValues() {
-    return Number(document.forms.isCheckradio.r1.value);
-  }
+function getDefaultValue() {
+    const value = Number(document.forms.isCheckradio.r1.value)
+    let size = 10
+    let countBomb  = 15
+    if (document.getElementById('checkboxForGame').checked) {
+        size = getSizeGameField()
+        countBomb = getCountBombOnGameField()
+    } else {
+        switch (value) {
+            case 0: {
+                size = 10
+                countBomb = 15
+                break
+            } 
+            case 1: {
+                size = 15
+                countBomb = 40
+                break
+            } 
+            case 2: {
+                size = 20
+                countBomb = 80
+                break
+            } 
+        }
+    }
+    return {size, countBomb}
+}
 
 
   //добавление людей в список игроков
