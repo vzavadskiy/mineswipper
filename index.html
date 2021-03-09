@@ -1,41 +1,46 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta lang="en">
-        <meta charset="utf-8">
-        <title>Mineswipper</title>
-        <link rel="shortcut icon" href="/bomb.ico">
-        <link rel="stylesheet" href="/style.css">
 
-    </head>
+<head>
+    <meta lang="en">
+    <meta charset="utf-8">
+    <title>Mineswipper</title>
+    <link rel="shortcut icon" href="/bomb.ico">
+    <link rel="stylesheet" href="/style.css">
 
-    <body class="container">
-        <h1>Сапёр</h1>
-        <div style="width: 100%; height: 1px; background: black;"></div>
-        
-        <p></p>
-        <form id="isCheckradio">
-            <div>
-                <label><input type="radio" name="r1" value="0" checked> Легкий (10 на 10, 15 бомб)</label><br>
-                <label><input type="radio" name="r1" value="1"> Средний (15 на 15, 40 бомб)</label><br>
-                <label><input type="radio" name="r1" value="2"> Сложный (20 на 20, 80 бомб)</label><br>
-            </div>
-            <div id="isCheckbox" class="is-hidden">
-                <label> Введите количество бомб  <input type="number" id="countBomb" max="624" min="1" value="5"></label><br><br>
-                <label> Размерность игрового поля  <input type="number" id="sizeField" max="25" min="2" value="5"></label><br>
-            </div>
-        </form>
-        <!-- document.getElementsByName('r1'); -->
-        <label>Задать свои параметры <input type="checkbox" id="checkboxForGame"><br><br></label> 
-        <!-- onchange="checkBox() -->
+</head>
 
-        <button id="showField" onclick="letsGo()">Отобразить</button>
+<body class="container">
+    <h1>Сапёр</h1>
+    <a href="https://github.com/vzavadskiy/mineswipper" target="_blank"><img
+            src="https://miro.medium.com/max/719/0*9f5uMrKMjLbzEf7q.png" width="100px" height="55px" alt="gitHub"
+            title="Проект на GitHub"></a>
 
-        <div id="general"></div>
-        
-        <script src="/sourse.js"></script>
-        <script src="/main.js"></script>
-    </body>
+
+    <div style="width: 100%; height: 1px; background: black;"></div>
+
+    <p></p>
+    <form id="isCheckradio">
+        <div>
+            <label><input type="radio" name="r1" value="0" checked> Легкий (10 на 10, 15 бомб)</label><br>
+            <label><input type="radio" name="r1" value="1"> Средний (15 на 15, 40 бомб)</label><br>
+            <label><input type="radio" name="r1" value="2"> Сложный (20 на 20, 80 бомб)</label><br>
+        </div>
+        <div id="isCheckbox" class="is-hidden">
+            <label> Введите количество бомб <input type="number" id="countBomb" max="624" min="1" value="5"></label>
+            <br><br>
+            <label> Размерность игрового поля <input type="number" id="sizeField" max="25" min="2" value="5"></label>
+            <br>
+        </div>
+    </form>
+    <label>Задать свои параметры <input type="checkbox" id="checkboxForGame"><br><br></label>
+
+    <button id="showField" onclick="letsGo()">Отобразить</button>
+
+    <div id="general"></div>
+
+    <script src="/sourse.js"></script>
+    <script src="/main.js"></script>
+</body>
+
 </html>
-
-
